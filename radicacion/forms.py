@@ -19,12 +19,18 @@ class AfiliadoForm(forms.ModelForm):
 
 
 class FormulaBaseForm(forms.ModelForm):
+    medico = forms.ModelChoiceField(
+        queryset=Medico.objects.all(),
+        to_field_name="registro_medico",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Registro médico o texto"}),
+        required=True,
+    )
+
     class Meta:
         model = FormulaBase
         fields = ["afiliado", "medico", "institucion", "fecha_formula", "observaciones", "activo"]
         widgets = {
             "afiliado": forms.Select(attrs={"class": "form-select"}),
-            "medico": forms.Select(attrs={"class": "form-select"}),
             "institucion": forms.TextInput(attrs={"class": "form-control", "placeholder": "Institución"}),
             "fecha_formula": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
             "observaciones": forms.Textarea(attrs={"class": "form-control", "rows": 4}),

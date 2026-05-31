@@ -9,7 +9,7 @@
     <p class="text-muted mb-0">Gestión de personas afiliadas y acceso al flujo de radicación.</p>
   </div>
   <div class="d-flex gap-2">
-    <a class="btn btn-soft" data-modal-url="{% url 'radicacion:crear_modal' %}" href="#">Crear en modal</a>
+    <a class="btn btn-brand" data-modal-url="{% url 'radicacion:crear_modal' %}" href="#">+ Añadir afiliado</a>
   </div>
 </div>
 
@@ -35,14 +35,14 @@
             <td>{{ afiliado.get_tipo_documento_display }}</td>
             <td>{% if afiliado.activo %}<span class="badge text-bg-success">Activo</span>{% else %}<span class="badge text-bg-secondary">Inactivo</span>{% endif %}</td>
             <td class="text-end">
-              <a class="btn btn-sm btn-outline-secondary icon-btn" data-modal-url="{% url 'radicacion:editar_modal' afiliado.pk %}" href="#" title="Editar afiliado" aria-label="Editar afiliado">
+              <a class="btn btn-sm icon-btn btn-action" data-modal-url="{% url 'radicacion:editar_modal' afiliado.pk %}" href="#" title="Editar afiliado" aria-label="Editar afiliado">
                 <i class="bi bi-pencil"></i>
               </a>
-              <a class="btn btn-sm btn-brand icon-btn" href="{% url 'radicacion:radicar' %}?afiliado={{ afiliado.pk }}" title="Radicar fórmula" aria-label="Radicar fórmula">
+              <a class="btn btn-sm icon-btn btn-action" data-modal-url="{% url 'radicacion:radicar' %}?afiliado={{ afiliado.pk }}" href="#" title="Radicar fórmula" aria-label="Radicar fórmula">
                 <i class="bi bi-file-earmark-plus"></i>
               </a>
               <button
-                class="btn btn-sm btn-outline-danger icon-btn"
+                class="btn btn-sm icon-btn btn-action-delete"
                 type="button"
                 data-delete-url="{% url 'radicacion:eliminar' afiliado.pk %}"
                 data-delete-name="{{ afiliado.nombres }} {{ afiliado.apellidos }}"

@@ -1,1 +1,54 @@
-{% include "includes/form_card.html" with title="Fórmula base" description="Formulario en modal para la fórmula." submit_label="Guardar fórmula" ajax=True %}
+<div class="app-card p-4">
+	<div class="mb-4">
+		<h1 class="h4 mb-1">Radicar fórmula</h1>
+		<p class="text-muted mb-0">Formulario en modal para radicar una fórmula.</p>
+	</div>
+
+	<form method="post" action="{{ action|default:request.path }}" data-ajax-form="true">
+		{% csrf_token %}
+		{{ form.non_field_errors }}
+
+		<div class="row g-3">
+		<div class="col-md-6">
+			<label class="form-label" for="{{ form.afiliado.id_for_label }}">Afiliado</label>
+			{{ form.afiliado }}
+			{{ form.afiliado.errors }}
+		</div>
+		<div class="col-md-6">
+			<label class="form-label" for="{{ form.medico.id_for_label }}">Médico</label>
+			{{ form.medico }}
+			{{ form.medico.errors }}
+		</div>
+
+		<div class="col-md-6">
+			<label class="form-label" for="{{ form.institucion.id_for_label }}">Institución</label>
+			{{ form.institucion }}
+			{{ form.institucion.errors }}
+		</div>
+		<div class="col-md-6">
+			<label class="form-label" for="{{ form.fecha_formula.id_for_label }}">Fecha fórmula</label>
+			{{ form.fecha_formula }}
+			{{ form.fecha_formula.errors }}
+		</div>
+
+		<div class="col-12">
+			<label class="form-label" for="{{ form.observaciones.id_for_label }}">Observaciones</label>
+			{{ form.observaciones }}
+			{{ form.observaciones.errors }}
+		</div>
+
+		<div class="col-12">
+			<div class="form-check">
+				{{ form.activo }}
+				<label class="form-check-label" for="{{ form.activo.id_for_label }}">Activo</label>
+			</div>
+			{{ form.activo.errors }}
+		</div>
+		</div>
+
+		<div class="d-flex flex-wrap justify-content-end gap-2 mt-4">
+			<button class="btn btn-outline-secondary" type="button" data-bs-dismiss="modal">Cancelar</button>
+			<button class="btn btn-brand" type="submit">Guardar fórmula</button>
+		</div>
+	</form>
+</div>
