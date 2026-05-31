@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_GET, require_POST
 from django.views.generic import CreateView, ListView, UpdateView
 
@@ -45,10 +45,32 @@ class AfiliadoListView(ListView):
     model = Afiliado
     template_name = "radicacion/afiliado_lista.html"
     context_object_name = "afiliados"
-    paginate_by = 20
 
     def get_queryset(self):
         return Afiliado.objects.all().order_by("apellidos", "nombres")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        afiliados = list(context["afiliados"])
+        context["afiliados_data"] = [
+            {
+                "id": afiliado.pk,
+                "numero_documento": afiliado.numero_documento,
+                "nombres": afiliado.nombres,
+                "apellidos": afiliado.apellidos,
+                "tipo_documento": afiliado.tipo_documento,
+                "tipo_documento_label": afiliado.get_tipo_documento_display(),
+                "activo": afiliado.activo,
+                "activo_label": "Activo" if afiliado.activo else "Inactivo",
+                "activo_badge_class": "text-bg-success" if afiliado.activo else "text-bg-secondary",
+                "full_name": f"{afiliado.nombres} {afiliado.apellidos}",
+                "edit_url": reverse("radicacion:editar_modal", args=[afiliado.pk]),
+                "radicar_url": f"{reverse('radicacion:radicar')}?afiliado={afiliado.pk}",
+                "delete_url": reverse("radicacion:eliminar", args=[afiliado.pk]),
+            }
+            for afiliado in afiliados
+        ]
+        return context
 
 
 class AfiliadoCreateView(AjaxModelFormMixin, CreateView):
