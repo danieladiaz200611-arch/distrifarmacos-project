@@ -39,18 +39,6 @@ class Afiliado(ModeloBase):
         return f"{self.numero_documento} - {self.nombres} {self.apellidos}"
 
 
-class Medico(ModeloBase):
-    nombres = models.CharField(max_length=255)
-    apellidos = models.CharField(max_length=255)
-    registro_medico = models.CharField(max_length=50, unique=True)
-
-    class Meta:
-        ordering = ("apellidos", "nombres")
-
-    def __str__(self) -> str:
-        return f"{self.registro_medico} - {self.nombres} {self.apellidos}"
-
-
 class FormulaBase(ModeloBase):
     codigo_formula = models.CharField(max_length=20, unique=True, blank=True)
     afiliado = models.ForeignKey(Afiliado, on_delete=models.PROTECT, related_name="formulas")

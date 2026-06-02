@@ -32,21 +32,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Medico',
-            fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fecha_creacion', models.DateTimeField(auto_now_add=True)),
-                ('fecha_actualizacion', models.DateTimeField(auto_now=True)),
-                ('activo', models.BooleanField(default=True)),
-                ('nombres', models.CharField(max_length=255)),
-                ('apellidos', models.CharField(max_length=255)),
-                ('registro_medico', models.CharField(max_length=50, unique=True)),
-            ],
-            options={
-                'ordering': ('apellidos', 'nombres'),
-            },
-        ),
-        migrations.CreateModel(
             name='FormulaBase',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -58,7 +43,7 @@ class Migration(migrations.Migration):
                 ('fecha_formula', models.DateField()),
                 ('observaciones', models.TextField(blank=True)),
                 ('afiliado', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='formulas', to='radicacion.afiliado')),
-                ('medico', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='formulas', to='radicacion.medico')),
+                ('medico', models.CharField(max_length=255)),
             ],
             options={
                 'ordering': ('-fecha_creacion',),

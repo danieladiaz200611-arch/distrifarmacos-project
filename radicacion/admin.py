@@ -1,18 +1,12 @@
 from django.contrib import admin
 
-from .models import Afiliado, FormulaBase, FormulaBaseTecnologia, Medico, SoporteFormulaBase
+from .models import Afiliado, FormulaBase, FormulaBaseTecnologia, SoporteFormulaBase
 
 
 @admin.register(Afiliado)
 class AfiliadoAdmin(admin.ModelAdmin):
     list_display = ("numero_documento", "nombres", "apellidos", "tipo_documento", "activo")
     search_fields = ("numero_documento", "nombres", "apellidos")
-
-
-@admin.register(Medico)
-class MedicoAdmin(admin.ModelAdmin):
-    list_display = ("registro_medico", "nombres", "apellidos", "activo")
-    search_fields = ("registro_medico", "nombres", "apellidos")
 
 
 @admin.register(FormulaBase)
