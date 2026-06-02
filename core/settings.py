@@ -14,6 +14,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_select2",
     "users.apps.UsersConfig",
     "parametricas.apps.ParametricasConfig",
     "radicacion.apps.RadicacionConfig",

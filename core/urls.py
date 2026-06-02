@@ -12,6 +12,7 @@ urlpatterns = [
     path("medicamentos/", include(("parametricas.urls", "parametricas"), namespace="parametricas")),
     path("afiliados/", include(("radicacion.urls", "radicacion"), namespace="radicacion")),
     path("formula/", include(("radicacion.urls_formulas", "formula"), namespace="formula")),
+    path("select2/", include("django_select2.urls")),
 ]
 
 if settings.DEBUG:
