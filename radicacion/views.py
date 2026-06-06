@@ -173,7 +173,7 @@ def radicar_formula(request):
                 return render(request, template, {"form": form, "desde_afiliados": desde_afiliados, "afiliado_id": afiliado_id})
 
             if is_ajax_request(request):
-                return JsonResponse({"ok": True})
+                return JsonResponse({"ok": True, "message": f"Fórmula {formula.codigo_formula} creada correctamente"})
             messages.success(request, f"Formula {formula.codigo_formula} creada.")
             return redirect("formula:detalle", pk=formula.pk)
         else:
@@ -277,7 +277,7 @@ class FormulaCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateView):
                 )
 
         if is_ajax_request(self.request):
-            return JsonResponse({"ok": True})
+            return JsonResponse({"ok": True, "message": "Fórmula creada correctamente"})
         return redirect(self.get_success_url())
 
 
@@ -352,7 +352,7 @@ def editar_formula(request, pk):
 
                 # Success — return outside the transaction so any commit errors are caught
                 if is_ajax_request(request):
-                    return JsonResponse({"ok": True})
+                    return JsonResponse({"ok": True, "message": f"Fórmula {formula.codigo_formula} actualizada correctamente"})
                 messages.success(request, f"Formula {formula.codigo_formula} actualizada.")
                 return redirect("formula:detalle", pk=formula.pk)
 
@@ -419,9 +419,10 @@ def _editar_context(formula, form, afiliado_display):
 @require_POST
 def formula_eliminar(request, pk):
     formula = get_object_or_404(FormulaBase, pk=pk)
+    nombre = formula.codigo_formula
     formula.delete()
     if is_ajax_request(request):
-        return JsonResponse({"ok": True})
+        return JsonResponse({"ok": True, "message": f"Fórmula {nombre} eliminada correctamente"})
     return redirect("formula:lista")
 
 
@@ -461,7 +462,7 @@ def cargar_soporte(request, pk):
         soporte.usuario_carga = request.user if request.user.is_authenticated else None
         soporte.save()
         if is_ajax_request(request):
-            return JsonResponse({"ok": True, "redirect_url": reverse_lazy("formula:detalle", kwargs={"pk": formula.pk})})
+            return JsonResponse({"ok": True, "redirect_url": reverse_lazy("formula:detalle", kwargs={"pk": formula.pk}), "message": "Soporte cargado correctamente"})
         messages.success(request, "Soporte cargado correctamente.")
         return redirect("formula:detalle", pk=formula.pk)
     if is_ajax_request(request):
