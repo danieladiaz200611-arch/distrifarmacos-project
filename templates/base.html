@@ -429,11 +429,24 @@
       color: #dc2626;
     }
 
-    .soporte-thumb-img {
-      background-size: cover;
-      background-position: center;
-    }
-  </style>
+        .soporte-thumb-img {
+          background-size: cover;
+          background-position: center;
+        }
+
+        /* Toast notifications */
+        .toast-container {
+          z-index: 1080;
+        }
+        .toast-container .toast {
+          min-width: 320px;
+          border-radius: 0.75rem;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+        }
+        .toast-container .toast .toast-body {
+          font-size: 0.95rem;
+        }
+      </style>
 </head>
 
 <body>
@@ -625,7 +638,7 @@
             <p class="text-muted mb-0" id="deleteAffiliateMessage">Esta acción no se puede deshacer.</p>
           </div>
 
-          <form method="post" id="deleteAffiliateForm">
+          <form method="post" id="deleteAffiliateForm" data-ajax-form="true">
             {% csrf_token %}
             <div class="d-flex gap-2 justify-content-center delete-modal-actions">
               <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -636,6 +649,8 @@
       </div>
     </div>
   </div>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" id="toastContainer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -763,6 +778,39 @@
       loadModal(trigger.dataset.modalUrl);
     });
 
+    // ---------------------------------------------------------------------------
+    // Toast notification
+    // ---------------------------------------------------------------------------
+    function showToast(message, type) {
+      type = type || 'success';
+      var container = document.getElementById('toastContainer');
+      if (!container) return;
+      var id = 'toast-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+      var icons = {
+        success: 'bi-check-circle-fill',
+        danger: 'bi-x-circle-fill',
+        warning: 'bi-exclamation-triangle-fill',
+        info: 'bi-info-circle-fill'
+      };
+      var icon = icons[type] || 'bi-info-circle-fill';
+      container.insertAdjacentHTML('beforeend',
+        '<div id="' + id + '" class="toast align-items-center text-bg-' + type + ' border-0" role="alert" aria-live="assertive" aria-atomic="true">' +
+          '<div class="d-flex">' +
+            '<div class="toast-body d-flex align-items-center gap-2">' +
+              '<i class="bi ' + icon + ' fs-5"></i>' +
+              '<span>' + message + '</span>' +
+            '</div>' +
+            '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>' +
+          '</div>' +
+        '</div>'
+      );
+      var el = document.getElementById(id);
+      if (el) {
+        bootstrap.Toast.getOrCreateInstance(el, { delay: 4000 }).show();
+        el.addEventListener('hidden.bs.toast', function () { el.remove(); });
+      }
+    }
+
     document.addEventListener('submit', async (event) => {
       const form = event.target.closest('form[data-ajax-form]');
       if (!form) {
@@ -793,22 +841,40 @@
       try {
         const data = JSON.parse(text);
         if (data.ok) {
-          const modalElement = document.getElementById('appModal');
-          const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
-          modal.hide();
-          modalElement.addEventListener('hidden.bs.modal', function () {
-            window.location.reload();
-          }, { once: true });
+          if (data.message) showToast(data.message, 'success');
+          // Close whichever modal is open
+          var modals = ['appModal', 'deleteAffiliateModal'];
+          for (var i = 0; i < modals.length; i++) {
+            var el = document.getElementById(modals[i]);
+            if (el && el.classList.contains('show')) {
+              bootstrap.Modal.getOrCreateInstance(el).hide();
+            }
+          }
+          setTimeout(function () { window.location.reload(); }, 1200);
+          return;
+        } else {
+          showToast(data.message || 'Error al procesar la solicitud', 'danger');
+          var modals = ['appModal', 'deleteAffiliateModal'];
+          for (var i = 0; i < modals.length; i++) {
+            var el = document.getElementById(modals[i]);
+            if (el && el.classList.contains('show')) {
+              bootstrap.Modal.getOrCreateInstance(el).hide();
+            }
+          }
           return;
         }
       } catch {
         /* not JSON — treat as HTML */
       }
       const modalBody = document.getElementById('appModalBody');
-      modalBody.innerHTML = text;
-      // Re-initialize Select2 after form error re-render
-      initMedicamentoSelect(modalBody);
-      initAfiliadoSelect(modalBody);
+      if (modalBody) {
+        modalBody.innerHTML = text;
+        // Re-initialize Select2 after form error re-render
+        initMedicamentoSelect(modalBody);
+        initAfiliadoSelect(modalBody);
+      } else {
+        showToast('Error al procesar la solicitud', 'danger');
+      }
     });
 
     document.addEventListener('shown.bs.modal', () => {

@@ -13,6 +13,7 @@ from .models import Medicamento
 
 class AjaxModelFormMixin:
     ajax_template_name = None
+    success_message = ""
 
     def form_invalid(self, form):
         if is_ajax_request(self.request) and self.ajax_template_name:
@@ -33,6 +34,7 @@ class AjaxModelFormMixin:
                     "redirect_url": self.get_success_url(),
                     "id": self.object.pk,
                     "label": str(self.object),
+                    "message": self.success_message,
                 }
             )
         return redirect(self.get_success_url())
@@ -75,6 +77,7 @@ class MedicamentoCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateVie
     template_name = "parametricas/medicamento_form.html"
     ajax_template_name = "parametricas/medicamento_modal_form.html"
     success_url = reverse_lazy("parametricas:lista")
+    success_message = "Medicamento creado correctamente"
 
 
 class MedicamentoUpdateView(GruposRequeridosMixin, AjaxModelFormMixin, UpdateView):
@@ -84,13 +87,15 @@ class MedicamentoUpdateView(GruposRequeridosMixin, AjaxModelFormMixin, UpdateVie
     template_name = "parametricas/medicamento_form.html"
     ajax_template_name = "parametricas/medicamento_modal_form.html"
     success_url = reverse_lazy("parametricas:lista")
+    success_message = "Medicamento actualizado correctamente"
 
 
 @grupos_requeridos("Digitador",)
 @require_POST
 def medicamento_eliminar(request, pk):
     medicamento = get_object_or_404(Medicamento, pk=pk)
+    nombre = str(medicamento)
     medicamento.delete()
     if is_ajax_request(request):
-        return JsonResponse({"ok": True})
+        return JsonResponse({"ok": True, "message": f"Medicamento \"{nombre}\" eliminado correctamente"})
     return redirect("parametricas:lista")
