@@ -18,6 +18,7 @@ from .models import Afiliado, FormulaBase, FormulaBaseTecnologia, SoporteFormula
 
 class AjaxModelFormMixin:
     ajax_template_name = None
+    success_message = ""
 
     def form_invalid(self, form):
         if is_ajax_request(self.request) and self.ajax_template_name:
@@ -38,6 +39,7 @@ class AjaxModelFormMixin:
                     "redirect_url": self.get_success_url(),
                     "id": self.object.pk,
                     "label": str(self.object),
+                    "message": self.success_message,
                 }
             )
         return redirect(self.get_success_url())
@@ -83,6 +85,7 @@ class AfiliadoCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateView):
     template_name = "radicacion/afiliado_modal_form.html"
     ajax_template_name = "radicacion/afiliado_modal_form.html"
     success_url = reverse_lazy("radicacion:lista")
+    success_message = "Afiliado creado correctamente"
 
 
 class AfiliadoUpdateView(GruposRequeridosMixin, AjaxModelFormMixin, UpdateView):
@@ -92,15 +95,17 @@ class AfiliadoUpdateView(GruposRequeridosMixin, AjaxModelFormMixin, UpdateView):
     template_name = "radicacion/afiliado_modal_form.html"
     ajax_template_name = "radicacion/afiliado_modal_form.html"
     success_url = reverse_lazy("radicacion:lista")
+    success_message = "Afiliado actualizado correctamente"
 
 
 @grupos_requeridos("Digitador",)
 @require_POST
 def afiliado_eliminar(request, pk):
     afiliado = get_object_or_404(Afiliado, pk=pk)
+    nombre = str(afiliado)
     afiliado.delete()
     if is_ajax_request(request):
-        return JsonResponse({"ok": True})
+        return JsonResponse({"ok": True, "message": f"Afiliado \"{nombre}\" eliminado correctamente"})
     return redirect("radicacion:lista")
 
 
