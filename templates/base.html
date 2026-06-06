@@ -728,9 +728,6 @@
 
       const fd = new FormData(form);
 
-      // Always inject medicamentos_json from the global array directly —
-      // do NOT rely on the hidden input .value which may not be synced
-      // reliably across all browsers after innerHTML injection.
       fd.delete('medicamentos_json');
       fd.append('medicamentos_json', JSON.stringify(window._medicamentosRadicar || []));
 
@@ -748,18 +745,23 @@
         body: fd,
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       });
-      const contentType = response.headers.get('content-type') || '';
-      if (contentType.includes('application/json')) {
-        const data = await response.json();
+      const text = await response.text();
+      try {
+        const data = JSON.parse(text);
         if (data.ok) {
           const modalElement = document.getElementById('appModal');
-          bootstrap.Modal.getOrCreateInstance(modalElement).hide();
-          window.location.href = data.redirect_url || window.location.href;
+          const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+          modal.hide();
+          modalElement.addEventListener('hidden.bs.modal', function () {
+            window.location.reload();
+          }, { once: true });
           return;
         }
+      } catch {
+        /* not JSON — treat as HTML */
       }
       const modalBody = document.getElementById('appModalBody');
-      modalBody.innerHTML = await response.text();
+      modalBody.innerHTML = text;
       // Re-initialize Select2 after form error re-render
       initMedicamentoSelect(modalBody);
     });
@@ -913,6 +915,10 @@
         wrapper.style.display = '';
         window._medicamentosRadicar.forEach(function (med, idx) {
           var tr = document.createElement('tr');
+          tr.dataset.medId = med.id;
+          tr.dataset.medLabel = med.label;
+          tr.dataset.medCantidad = med.cantidad;
+          tr.dataset.medInfo = med.info || '';
           tr.innerHTML =
             '<td>' + escapeHtml(med.label) + '</td>' +
             '<td>' + escapeHtml(med.cantidad) + '</td>' +
