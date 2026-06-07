@@ -549,94 +549,133 @@
         <ul class="navbar-nav ms-auto gap-lg-3 gap-2 align-items-lg-center">
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <div class="d-flex align-items-center gap-2 user-greeting">
-              <div class="user-dot"></div>
-              <span class="user-name">
-                {{ user.first_name }}
-                {% if user.last_name %}
-                {{ user.last_name|slice:":1" }}.
-                {% endif %}
-              </span>
+            <div class="d-flex align-items-center gap-1 user-session">
+              <div class="d-flex align-items-center gap-2 user-greeting">
+                <div class="user-dot"></div>
+                <i class="bi bi-person-circle user-icon"></i>
+                <span class="user-name">
+                  {{ user.first_name }}
+                  {% if user.last_name %}
+                  {{ user.last_name|slice:":1" }}.
+                  {% endif %}
+                </span>
+              </div>
+              <div class="session-divider"></div>
+              <form method="post" action="{% url 'logout' %}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn-logout">
+                  <i class="bi bi-box-arrow-right"></i> Salir
+                </button>
+              </form>
             </div>
-          </li>
-
-          <li class="nav-item">
-            <form method="post" action="{% url 'logout' %}" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn-logout">
-                Salir
-              </button>
-            </form>
           </li>
           {% endif %}
         </ul>
       </div>
 
       <style>
-        /* Reset y estilos base minimalistas */
+        /* Contenedor que agrupa usuario + logout */
+        .user-session {
+          background: #f8fafc;
+          border: 1px solid #e2e8f0;
+          border-radius: 40px;
+          padding: 3px;
+          transition: all 0.2s ease;
+        }
+
+        .user-session:hover {
+          background: #f1f5f9;
+          border-color: #cbd5e1;
+        }
+
+        /* Saludo al usuario */
         .user-greeting {
           cursor: default;
-          padding: 6px 12px;
+          padding: 3px 10px;
           border-radius: 40px;
           transition: all 0.2s ease;
+        }
+
+        .user-greeting:hover {
+          background: rgba(15, 118, 110, 0.08);
         }
 
         /* Punto verde de estado */
         .user-dot {
-          width: 8px;
-          height: 8px;
-          background-color: #10b981;
+          width: 10px;
+          height: 10px;
+          background: #10b981;
           border-radius: 50%;
-          transition: all 0.2s ease;
+          box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+          transition: all 0.25s ease;
+        }
+
+        .user-greeting:hover .user-dot {
+          box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3);
+          background: #059669;
+        }
+
+        /* Icono de usuario */
+        .user-icon {
+          font-size: 1.05rem;
+          color: #94a3b8;
+          transition: color 0.2s ease;
+        }
+
+        .user-greeting:hover .user-icon {
+          color: #0f766e;
         }
 
         /* Nombre de usuario */
         .user-name {
-          font-size: 0.9rem;
-          font-weight: 500;
-          color: #1f2937;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #1e293b;
           letter-spacing: -0.2px;
-          transition: color 0.2s ease;
-        }
-
-        /* Hover en el área de usuario */
-        .user-greeting:hover {
-          background-color: #f3f4f6;
-        }
-
-        .user-greeting:hover .user-dot {
-          transform: scale(1.2);
-          background-color: #059669;
         }
 
         .user-greeting:hover .user-name {
-          color: #059669;
+          color: #0f766e;
         }
 
-        /* Botón de salir minimalista */
+        /* Divisor entre usuario y logout */
+        .session-divider {
+          width: 1px;
+          height: 24px;
+          background: #e2e8f0;
+          margin: 0 2px;
+          flex-shrink: 0;
+        }
+
+        /* Botón de salir */
         .btn-logout {
           background: transparent;
-          border: 1px solid #e5e7eb;
+          border: none;
           border-radius: 40px;
-          padding: 6px 20px;
+          padding: 5px 14px;
           font-size: 0.85rem;
           font-weight: 500;
-          color: #6b7280;
+          color: #64748b;
           cursor: pointer;
           transition: all 0.2s ease;
-          letter-spacing: -0.2px;
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          line-height: 1.4;
         }
 
-        /* Hover del botón salir */
         .btn-logout:hover {
-          border-color: #fecaca;
-          background-color: #fef2f2;
+          background: #fef2f2;
           color: #dc2626;
-          transform: translateY(-1px);
         }
 
-        .btn-logout:active {
-          transform: translateY(0);
+        .btn-logout i {
+          font-size: 0.9rem;
+          transition: transform 0.2s ease;
+        }
+
+        .btn-logout:hover i {
+          transform: translateX(2px);
         }
 
         /* Versión responsive */
@@ -646,21 +685,21 @@
             gap: 0.75rem !important;
           }
 
+          .user-session {
+            width: 100%;
+            justify-content: center;
+            background: transparent;
+            border: none;
+            padding: 0;
+          }
+
           .user-greeting {
             justify-content: center;
-            width: 100%;
-            background-color: #fafafa;
-            padding: 10px;
+            padding: 6px 12px;
           }
 
           .btn-logout {
-            width: 100%;
-            text-align: center;
-            padding: 8px 20px;
-          }
-
-          .user-name {
-            font-size: 0.95rem;
+            padding: 6px 16px;
           }
         }
 
