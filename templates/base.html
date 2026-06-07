@@ -35,6 +35,12 @@
         radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 26%),
         linear-gradient(180deg, #f8fbfc 0%, var(--bg) 100%);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-shell {
+      flex: 1;
     }
 
     h1,
@@ -762,6 +768,51 @@
         .navbar-nav>.nav-item {
           animation: subtleFade 0.25s ease-out;
         }
+
+        /* Footer */
+        .app-footer {
+          padding: 1.5rem 0 2.5rem;
+          margin-top: 2rem;
+        }
+
+        .footer-divider {
+          height: 1px;
+          background: linear-gradient(90deg, transparent, var(--border), transparent);
+          margin-bottom: 1.25rem;
+        }
+
+        .footer-content {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          flex-wrap: wrap;
+          font-size: 0.8rem;
+          color: var(--muted);
+        }
+
+        .footer-brand {
+          font-family: "Space Grotesk", sans-serif;
+          font-weight: 600;
+          font-size: 0.85rem;
+          color: var(--text);
+          letter-spacing: -0.2px;
+        }
+
+        .footer-sep {
+          color: var(--border);
+          font-size: 0.65rem;
+        }
+
+        .footer-version {
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 0.7rem;
+          font-weight: 500;
+          padding: 2px 8px;
+          background: #f1f5f9;
+          border-radius: 6px;
+          color: #94a3b8;
+        }
       </style>
     </div>
   </nav>
@@ -779,6 +830,19 @@
       {% block content %}{% endblock %}
     </div>
   </main>
+
+  <footer class="app-footer">
+    <div class="container">
+      <div class="footer-divider"></div>
+      <div class="footer-content">
+        <span class="footer-brand">Distrifármacos</span>
+        <span class="footer-sep">|</span>
+        <span class="footer-copy">&copy; {% now "Y" %} — Todos los derechos reservados</span>
+        <span class="footer-sep d-none d-sm-inline">|</span>
+        <span class="footer-version">v1.0</span>
+      </div>
+    </div>
+  </footer>
 
   <div class="modal fade" id="appModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
     data-bs-keyboard="false">
