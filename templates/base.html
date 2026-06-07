@@ -437,14 +437,97 @@
         /* Toast notifications */
         .toast-container {
           z-index: 1080;
+          pointer-events: none;
+          padding: 1rem;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.5rem;
         }
         .toast-container .toast {
-          min-width: 320px;
-          border-radius: 0.75rem;
-          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+          min-width: 360px;
+          max-width: 420px;
+          border-radius: 14px;
+          border: 1px solid rgba(255,255,255,0.12);
+          pointer-events: auto;
+          position: relative;
+          overflow: hidden;
+          opacity: 0;
+          transform: translateX(80px) scale(0.94);
+          transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+          margin-top: 0;
+          box-shadow: 0 0 0 1px rgba(255,255,255,0.05),
+                      0 30px 60px rgba(0, 0, 0, 0.12),
+                      0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        .toast-container .toast.show {
+          opacity: 1;
+          transform: translateX(0) scale(1);
         }
         .toast-container .toast .toast-body {
-          font-size: 0.95rem;
+          font-size: 0.9rem;
+          font-weight: 420;
+          padding: 0.9rem 1rem;
+          letter-spacing: 0.008em;
+          line-height: 1.45;
+          gap: 0.625rem;
+        }
+        .toast-container .toast .toast-body .bi {
+          font-size: 1.05rem;
+          flex-shrink: 0;
+          width: 28px;
+          height: 28px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+        }
+        /* Icon background by type */
+        .toast-container .toast.text-bg-success .toast-body .bi { background: rgba(46, 204, 113, 0.2); }
+        .toast-container .toast.text-bg-danger  .toast-body .bi { background: rgba(231, 76, 60, 0.25); }
+        .toast-container .toast.text-bg-warning .toast-body .bi { background: rgba(243, 156, 18, 0.2); }
+        .toast-container .toast.text-bg-info    .toast-body .bi { background: rgba(52, 152, 219, 0.2); }
+        /* Gradient backgrounds per type */
+        .toast-container .toast.text-bg-success { background: linear-gradient(135deg, #1a7a3a 0%, #28a860 100%); }
+        .toast-container .toast.text-bg-danger  { background: linear-gradient(135deg, #8b1e1e 0%, #c0392b 100%); }
+        .toast-container .toast.text-bg-warning { background: linear-gradient(135deg, #8a6d0b 0%, #d4a017 100%); }
+        .toast-container .toast.text-bg-info    { background: linear-gradient(135deg, #1a5276 0%, #2980b9 100%); }
+        /* Close button */
+        .toast-container .toast .btn-close {
+          opacity: 0.5;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          filter: brightness(1.5);
+          margin-right: 0.75rem !important;
+        }
+        .toast-container .toast .btn-close:hover {
+          opacity: 1;
+          transform: scale(1.2) rotate(90deg);
+        }
+        /* Progress bar */
+        .toast-container .toast .toast-progress {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          height: 3px;
+          background: rgba(255, 255, 255, 0.35);
+          border-radius: 0 2px 2px 0;
+          animation: toastProgress 4s linear forwards;
+        }
+        @keyframes toastProgress {
+          from { width: 100%; }
+          to   { width: 0%; }
+        }
+        /* Shimmer overlay */
+        .toast-container .toast::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(105deg,
+            transparent 30%,
+            rgba(255,255,255,0.06) 50%,
+            transparent 70%);
+          pointer-events: none;
         }
       </style>
 </head>
@@ -781,7 +864,7 @@
     // ---------------------------------------------------------------------------
     // Toast notification
     // ---------------------------------------------------------------------------
-    function showToast(message, type) {
+    function showToast(message, type, onHidden) {
       type = type || 'success';
       var container = document.getElementById('toastContainer');
       if (!container) return;
@@ -797,17 +880,22 @@
         '<div id="' + id + '" class="toast align-items-center text-bg-' + type + ' border-0" role="alert" aria-live="assertive" aria-atomic="true">' +
           '<div class="d-flex">' +
             '<div class="toast-body d-flex align-items-center gap-2">' +
-              '<i class="bi ' + icon + ' fs-5"></i>' +
+              '<i class="bi ' + icon + '"></i>' +
               '<span>' + message + '</span>' +
             '</div>' +
             '<button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>' +
           '</div>' +
+          '<div class="toast-progress"></div>' +
         '</div>'
       );
       var el = document.getElementById(id);
       if (el) {
+        el.offsetHeight; // force reflow for CSS transition
         bootstrap.Toast.getOrCreateInstance(el, { delay: 4000 }).show();
-        el.addEventListener('hidden.bs.toast', function () { el.remove(); });
+        el.addEventListener('hidden.bs.toast', function () {
+          el.remove();
+          if (typeof onHidden === 'function') onHidden();
+        });
       }
     }
 
@@ -841,6 +929,9 @@
       try {
         const data = JSON.parse(text);
         if (data.ok) {
+          // Refresh table immediately
+          if (typeof window.refreshCurrentTable === 'function') { window.refreshCurrentTable(); } else { window.location.reload(); }
+          // Show toast notification (independent, no callback)
           if (data.message) showToast(data.message, 'success');
           // Close whichever modal is open
           var modals = ['appModal', 'deleteAffiliateModal'];
@@ -850,7 +941,6 @@
               bootstrap.Modal.getOrCreateInstance(el).hide();
             }
           }
-          setTimeout(function () { window.location.reload(); }, 1200);
           return;
         } else {
           showToast(data.message || 'Error al procesar la solicitud', 'danger');
