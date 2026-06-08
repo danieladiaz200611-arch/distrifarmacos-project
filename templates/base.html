@@ -1027,6 +1027,7 @@
         <span class="sidebar-text">Dashboard</span>
       </a>
       <div class="sidebar-heading">Módulos</div>
+      {% if request.user.is_superuser %}
       <a href="{% url 'parametricas:lista' %}" class="sidebar-item {% if request.resolver_match.app_name == 'parametricas' %}active{% endif %}">
         <span class="sidebar-icon"><i class="bi bi-boxes"></i></span>
         <span class="sidebar-text">Medicamentos</span>
@@ -1035,10 +1036,18 @@
         <span class="sidebar-icon"><i class="bi bi-people"></i></span>
         <span class="sidebar-text">Afiliados</span>
       </a>
+      {% endif %}
       <a href="{% url 'formula:lista' %}" class="sidebar-item {% if request.resolver_match.app_name == 'formula' %}active{% endif %}">
         <span class="sidebar-icon"><i class="bi bi-receipt"></i></span>
         <span class="sidebar-text">Fórmulas</span>
       </a>
+      {% if request.user.is_superuser %}
+      <div class="sidebar-heading">Administración</div>
+      <a href="{% url 'usuarios:lista' %}" class="sidebar-item {% if request.resolver_match.app_name == 'usuarios' %}active{% endif %}">
+        <span class="sidebar-icon"><i class="bi bi-people"></i></span>
+        <span class="sidebar-text">Usuarios</span>
+      </a>
+      {% endif %}
       </nav>
     </aside>
 

@@ -34,8 +34,8 @@ def _serializar_afiliado(a):
     }
 
 
-def _serializar_formula(f):
-    return {
+def _serializar_formula(f, request=None):
+    data = {
         "id": f.pk,
         "codigo_formula": f.codigo_formula,
         "afiliado": str(f.afiliado),
@@ -48,10 +48,12 @@ def _serializar_formula(f):
         "activo_label": "Activo" if f.activo else "Inactivo",
         "activo_badge_class": "text-bg-success" if f.activo else "text-bg-secondary",
         "detalle_url": reverse("formula:detalle", args=[f.pk]),
-        "editar_url": reverse("formula:editar_modal", args=[f.pk]),
-        "eliminar_url": reverse("formula:eliminar", args=[f.pk]),
-        "delete_name": f"{f.codigo_formula} — {f.afiliado}",
     }
+    if request and (request.user.is_superuser or request.user.groups.filter(name="digitador").exists()):
+        data["editar_url"] = reverse("formula:editar_modal", args=[f.pk])
+        data["eliminar_url"] = reverse("formula:eliminar", args=[f.pk])
+        data["delete_name"] = f"{f.codigo_formula} — {f.afiliado}"
+    return data
 
 
 class AjaxModelFormMixin:
@@ -84,7 +86,6 @@ class AjaxModelFormMixin:
 
 
 class AfiliadoListView(GruposRequeridosMixin, ListView):
-    grupos_requeridos = ("Digitador",)
     model = Afiliado
     template_name = "radicacion/afiliado_lista.html"
     context_object_name = "afiliados"
@@ -99,7 +100,7 @@ class AfiliadoListView(GruposRequeridosMixin, ListView):
         return context
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos()
 @require_GET
 def afiliados_json(request):
     afiliados = Afiliado.objects.all().order_by("apellidos", "nombres")
@@ -107,7 +108,6 @@ def afiliados_json(request):
 
 
 class AfiliadoCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateView):
-    grupos_requeridos = ("Digitador",)
     model = Afiliado
     form_class = AfiliadoForm
     template_name = "radicacion/afiliado_modal_form.html"
@@ -117,7 +117,6 @@ class AfiliadoCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateView):
 
 
 class AfiliadoUpdateView(GruposRequeridosMixin, AjaxModelFormMixin, UpdateView):
-    grupos_requeridos = ("Digitador",)
     model = Afiliado
     form_class = AfiliadoForm
     template_name = "radicacion/afiliado_modal_form.html"
@@ -126,7 +125,7 @@ class AfiliadoUpdateView(GruposRequeridosMixin, AjaxModelFormMixin, UpdateView):
     success_message = "Afiliado actualizado correctamente"
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos()
 @require_POST
 def afiliado_eliminar(request, pk):
     afiliado = get_object_or_404(Afiliado, pk=pk)
@@ -137,7 +136,7 @@ def afiliado_eliminar(request, pk):
     return redirect("radicacion:lista")
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 def radicar_formula(request):
     desde_afiliados = "afiliado" in request.GET or request.POST.get("desde_afiliados") == "1"
     initial = {}
@@ -225,7 +224,7 @@ def radicar_formula(request):
 
 
 class FormulaListView(GruposRequeridosMixin, ListView):
-    grupos_requeridos = ("Digitador",)
+    grupos_requeridos = ("digitador", "gestor_calidad")
     model = FormulaBase
     template_name = "radicacion/formula_lista.html"
     context_object_name = "formulas"
@@ -236,19 +235,20 @@ class FormulaListView(GruposRequeridosMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         formulas = list(context["formulas"])
-        context["formulas_data"] = [_serializar_formula(f) for f in formulas]
+        context["formulas_data"] = [_serializar_formula(f, self.request) for f in formulas]
+        context["usuario_es_digitador"] = self.request.user.is_superuser or self.request.user.groups.filter(name="digitador").exists()
         return context
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador", "gestor_calidad")
 @require_GET
 def formulas_json(request):
     formulas = FormulaBase.objects.select_related("afiliado").all().order_by("-fecha_creacion")
-    return JsonResponse({"data": [_serializar_formula(f) for f in formulas]})
+    return JsonResponse({"data": [_serializar_formula(f, request) for f in formulas]})
 
 
 class FormulaCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateView):
-    grupos_requeridos = ("Digitador",)
+    grupos_requeridos = ("digitador",)
     model = FormulaBase
     form_class = FormulaBaseForm
     template_name = "radicacion/formula_form.html"
@@ -297,7 +297,7 @@ class FormulaCreateView(GruposRequeridosMixin, AjaxModelFormMixin, CreateView):
         return redirect(self.get_success_url())
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador", "gestor_calidad")
 def formula_detalle(request, pk):
     formula = get_object_or_404(
         FormulaBase.objects.select_related("afiliado").prefetch_related("tecnologias", "soportes"),
@@ -313,7 +313,7 @@ def formula_detalle(request, pk):
     return render(request, "radicacion/formula_detalle.html", context)
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 def editar_formula(request, pk):
     formula = get_object_or_404(
         FormulaBase.objects.select_related("afiliado").prefetch_related("tecnologias", "soportes"),
@@ -431,7 +431,7 @@ def _editar_context(formula, form, afiliado_display):
     }
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 @require_POST
 def formula_eliminar(request, pk):
     formula = get_object_or_404(FormulaBase, pk=pk)
@@ -442,7 +442,7 @@ def formula_eliminar(request, pk):
     return redirect("formula:lista")
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 @require_POST
 def formula_agregar_tecnologia(request, pk):
     formula = get_object_or_404(FormulaBase, pk=pk)
@@ -467,7 +467,7 @@ def formula_agregar_tecnologia(request, pk):
     )
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 @require_POST
 def cargar_soporte(request, pk):
     formula = get_object_or_404(FormulaBase, pk=pk)
@@ -496,7 +496,7 @@ def cargar_soporte(request, pk):
     )
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 @require_GET
 def buscar_medicamento(request):
     query = request.GET.get("q", "").strip()
@@ -515,7 +515,7 @@ def buscar_medicamento(request):
     return JsonResponse({"results": resultados})
 
 
-@grupos_requeridos("Digitador",)
+@grupos_requeridos("digitador",)
 @require_GET
 def buscar_afiliado(request):
     query = request.GET.get("q", "").strip()

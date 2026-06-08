@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "parametricas.apps.ParametricasConfig",
     "radicacion.apps.RadicacionConfig",
+    "usuarios.apps.UsuariosConfig",
 ]
 
 MIDDLEWARE = [

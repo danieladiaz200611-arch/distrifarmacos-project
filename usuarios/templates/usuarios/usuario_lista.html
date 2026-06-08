@@ -1,42 +1,40 @@
 {% extends "base.html" %}
 
-{% block title %}Fórmulas | Distrifármacos{% endblock %}
+{% block title %}Usuarios | Distrifármacos{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
-    <h1 class="h3 mb-1">Fórmulas</h1>
-    <p class="text-muted mb-0">Listado de radicaciones</p>
+    <h1 class="h3 mb-1">Usuarios</h1>
+    <p class="text-muted mb-0">Gestión de usuarios del sistema.</p>
   </div>
   <div class="d-flex gap-2">
-    {% if usuario_es_digitador or request.user.is_superuser %}
-    <a class="btn btn-brand" data-modal-url="{% url 'formula:radicar' %}" href="#">
-      <i class="bi bi-plus-lg"></i> Radicar fórmula
+    <a class="btn btn-brand" data-modal-url="{% url 'usuarios:crear_modal' %}" href="#">
+      <i class="bi bi-plus-lg"></i> Nuevo usuario
     </a>
-    {% endif %}
   </div>
 </div>
 
-<div class="table-card p-3 p-md-4" id="formulasTableApp">
-  {{ formulas_data|json_script:"formulas-data" }}
+<div class="table-card p-3 p-md-4" id="usuariosTableApp">
+  {{ usuarios_data|json_script:"usuarios-data" }}
 
   <div class="row g-3 align-items-end mb-3">
-    <div class="col-12 col-lg-6">
-      <label class="form-label fw-semibold" for="formulasSearch">Buscar</label>
-      <input id="formulasSearch" class="form-control" type="search"
-             placeholder="Código, documento, afiliado, médico o institución">
+    <div class="col-12 col-lg-7">
+      <label class="form-label fw-semibold" for="usuariosSearch">Buscar</label>
+      <input id="usuariosSearch" class="form-control" type="search"
+             placeholder="Usuario, nombre, apellido o correo">
     </div>
-    <div class="col-6 col-lg-2">
-      <label class="form-label fw-semibold" for="formulasEstadoFiltro">Estado</label>
-      <select id="formulasEstadoFiltro" class="form-select">
+    <div class="col-6 col-lg-3">
+      <label class="form-label fw-semibold" for="usuariosEstadoFiltro">Estado</label>
+      <select id="usuariosEstadoFiltro" class="form-select">
         <option value="">Todos</option>
         <option value="true">Activo</option>
         <option value="false">Inactivo</option>
       </select>
     </div>
     <div class="col-6 col-lg-2">
-      <label class="form-label fw-semibold" for="formulasPageSize">Filas</label>
-      <select id="formulasPageSize" class="form-select">
+      <label class="form-label fw-semibold" for="usuariosPageSize">Filas</label>
+      <select id="usuariosPageSize" class="form-select">
         <option value="5">5</option>
         <option value="10" selected>10</option>
         <option value="20">20</option>
@@ -46,7 +44,7 @@
   </div>
 
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    <p class="text-muted mb-0" id="formulasTableSummary">Cargando fórmulas...</p>
+    <p class="text-muted mb-0" id="usuariosTableSummary">Cargando usuarios...</p>
     <small class="text-muted" data-table-range-info></small>
   </div>
 
@@ -55,7 +53,7 @@
       <thead data-table-head></thead>
       <tbody data-table-body>
         <tr>
-          <td colspan="7" class="text-center text-muted py-5">Cargando tabla...</td>
+          <td colspan="6" class="text-center text-muted py-5">Cargando tabla...</td>
         </tr>
       </tbody>
     </table>
@@ -63,14 +61,14 @@
 
   <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3 pt-3 border-top">
     <small class="text-muted" data-table-page-info></small>
-    <nav aria-label="Paginación de fórmulas">
+    <nav aria-label="Paginación de usuarios">
       <ul class="pagination pagination-sm mb-0 align-items-center" data-pagination-list></ul>
     </nav>
   </div>
 </div>
 
 <style>
-  #formulasTableApp .pagination .page-link {
+  #usuariosTableApp .pagination .page-link {
     color: var(--text);
     min-width: 34px;
     padding: .25rem .5rem;
@@ -80,27 +78,27 @@
     align-items: center;
     justify-content: center;
   }
-  #formulasTableApp .pagination .page-item.active .page-link {
+  #usuariosTableApp .pagination .page-item.active .page-link {
     background-color: var(--brand);
     border-color: var(--brand-dark);
     color: var(--surface);
     height: 33px;
   }
-  #formulasTableApp .pagination .page-link:hover:not([disabled]) {
+  #usuariosTableApp .pagination .page-link:hover:not([disabled]) {
     background-color: var(--brand-dark);
     color: var(--surface);
     transform: translateY(-1px);
   }
-  #formulasTableApp .pagination .page-item.disabled .page-link,
-  #formulasTableApp .pagination .page-link[disabled] {
+  #usuariosTableApp .pagination .page-item.disabled .page-link,
+  #usuariosTableApp .pagination .page-link[disabled] {
     color: var(--muted);
     opacity: .85;
   }
-  #formulasTableApp .page-number { font-weight: 600; line-height: 1; }
-  #formulasTableApp [data-table-page-info] { font-weight: 600; color: var(--muted); }
-  #formulasTableApp .page-link .bi { font-size: 1rem; }
-  #formulasTableApp .form-control,
-  #formulasTableApp .form-select { border-radius: 4px; }
+  #usuariosTableApp .page-number { font-weight: 600; line-height: 1; }
+  #usuariosTableApp [data-table-page-info] { font-weight: 600; color: var(--muted); }
+  #usuariosTableApp .page-link .bi { font-size: 1rem; }
+  #usuariosTableApp .form-control,
+  #usuariosTableApp .form-select { border-radius: 4px; }
 </style>
 
 <script type="module">
@@ -119,20 +117,20 @@
     RowPagination,
   } from 'https://esm.sh/@tanstack/table-core@8.21.3?bundle';
 
-  const root        = document.getElementById('formulasTableApp');
-  let data        = JSON.parse(document.getElementById('formulas-data').textContent);
-  const searchInput = document.getElementById('formulasSearch');
-  const estadoFiltro = document.getElementById('formulasEstadoFiltro');
-  const pageSizeSelect = document.getElementById('formulasPageSize');
-  const tableHead   = root.querySelector('[data-table-head]');
-  const tableBody   = root.querySelector('[data-table-body]');
-  const summary     = document.getElementById('formulasTableSummary');
-  const pageInfo    = root.querySelector('[data-table-page-info]');
-  const rangeInfo   = root.querySelector('[data-table-range-info]');
+  const root           = document.getElementById('usuariosTableApp');
+  let data             = JSON.parse(document.getElementById('usuarios-data').textContent);
+  const searchInput    = document.getElementById('usuariosSearch');
+  const estadoFiltro   = document.getElementById('usuariosEstadoFiltro');
+  const pageSizeSelect = document.getElementById('usuariosPageSize');
+  const tableHead      = root.querySelector('[data-table-head]');
+  const tableBody      = root.querySelector('[data-table-body]');
+  const summary        = document.getElementById('usuariosTableSummary');
+  const pageInfo       = root.querySelector('[data-table-page-info]');
+  const rangeInfo      = root.querySelector('[data-table-range-info]');
   const paginationList = root.querySelector('[data-pagination-list]');
 
   const state = {
-    sorting: [{ id: 'fecha_formula', desc: true }],
+    sorting: [{ id: 'username', desc: false }],
     columnFilters: [],
     globalFilter: '',
     columnPinning: { left: [], right: [] },
@@ -140,8 +138,7 @@
     pagination: { pageIndex: 0, pageSize: Number(pageSizeSelect.value) },
   };
 
-  const resolveUpdater = (updater, prev) =>
-    typeof updater === 'function' ? updater(prev) : updater;
+  const resolveUpdater = (u, prev) => typeof u === 'function' ? u(prev) : u;
 
   const esc = (v) => String(v ?? '')
     .replaceAll('&', '&amp;').replaceAll('<', '&lt;')
@@ -151,11 +148,10 @@
     const term = String(filterValue ?? '').trim().toLowerCase();
     if (!term) return true;
     const haystack = [
-      row.original.codigo_formula,
-      row.original.afiliado_documento,
-      row.original.afiliado,
-      row.original.medico,
-      row.original.institucion,
+      row.original.username,
+      row.original.first_name,
+      row.original.last_name,
+      row.original.email,
     ].join(' ').toLowerCase();
     return haystack.includes(term);
   };
@@ -167,35 +163,30 @@
 
   const columns = [
     {
-      accessorKey: 'codigo_formula',
-      header: 'Código',
+      accessorKey: 'username',
+      header: 'Usuario',
       cell: ({ getValue }) => `<span class="fw-semibold">${esc(getValue())}</span>`,
     },
     {
-      accessorKey: 'afiliado',
-      header: 'Afiliado',
+      accessorKey: 'full_name',
+      header: 'Nombre completo',
       cell: ({ getValue }) => esc(getValue()),
     },
     {
-      accessorKey: 'medico',
-      header: 'Médico',
-      cell: ({ getValue }) => esc(getValue()) || '<span class="text-muted">—</span>',
-    },
-    {
-      accessorKey: 'institucion',
-      header: 'Institución',
+      accessorKey: 'email',
+      header: 'Correo electrónico',
       cell: ({ getValue }) => esc(getValue()),
     },
     {
-      accessorKey: 'fecha_formula',
-      header: 'Fecha',
-      cell: ({ row }) => esc(row.original.fecha_formula_display),
+      accessorKey: 'groups',
+      header: 'Grupos',
+      cell: ({ getValue }) => esc(getValue()),
     },
     {
-      accessorKey: 'activo',
+      accessorKey: 'is_active',
       header: 'Estado',
       cell: ({ row }) =>
-        `<span class="badge ${esc(row.original.activo_badge_class)}">${esc(row.original.activo_label)}</span>`,
+        `<span class="badge ${esc(row.original.is_active_badge_class)}">${esc(row.original.is_active_label)}</span>`,
       filterFn: exactFilter,
     },
     {
@@ -204,34 +195,27 @@
       enableSorting: false,
       enableColumnFilter: false,
       cell: ({ row }) => {
-        const r = row.original;
-        let editBtn = '', deleteBtn = '';
-        if (r.editar_url) {
-          editBtn = `<a class="btn btn-sm icon-btn btn-action"
-             data-modal-url="${esc(r.editar_url)}" href="#"
-             title="Editar" aria-label="Editar fórmula ${esc(r.codigo_formula)}">
-            <i class="bi bi-pencil"></i>
-          </a>`;
-        }
-        if (r.eliminar_url) {
-          deleteBtn = `<button class="btn btn-sm icon-btn btn-action-delete"
-                  type="button"
-                  data-delete-url="${esc(r.eliminar_url)}"
-                  data-delete-name="${esc(r.delete_name)}"
-                  data-bs-toggle="modal"
-                  data-bs-target="#deleteAffiliateModal"
-                  title="Eliminar" aria-label="Eliminar fórmula ${esc(r.codigo_formula)}">
-            <i class="bi bi-trash"></i>
-          </button>`;
-        }
-        return `<div class="d-flex justify-content-end gap-1">
-          <a class="btn btn-sm icon-btn btn-action" href="${esc(r.detalle_url)}"
-             title="Ver detalle" aria-label="Ver detalle fórmula ${esc(r.codigo_formula)}">
-            <i class="bi bi-eye"></i>
-          </a>
-          ${editBtn}
-          ${deleteBtn}
-        </div>`;
+        const u = row.original;
+        return `
+          <div class="d-flex justify-content-end gap-1">
+            <a class="btn btn-sm icon-btn btn-action"
+               data-modal-url="${esc(u.grupos_url)}" href="#"
+               title="Grupos" aria-label="Grupos de ${esc(u.username)}">
+              <i class="bi bi-people"></i>
+            </a>
+            <a class="btn btn-sm icon-btn btn-action"
+               data-modal-url="${esc(u.editar_url)}" href="#"
+               title="Editar" aria-label="Editar ${esc(u.username)}">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <button class="btn btn-sm icon-btn btn-action-delete"
+                    type="button"
+                    data-user-delete-url="${esc(u.eliminar_url)}"
+                    data-user-delete-name="${esc(u.full_name || u.username)}"
+                    title="Eliminar" aria-label="Eliminar ${esc(u.username)}">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>`;
       },
     },
   ];
@@ -305,11 +289,11 @@
             return `<td>${content}</td>`;
           }).join('')}</tr>`
         ).join('')
-      : `<tr><td colspan="${COLS}" class="text-center text-muted py-5">No hay fórmulas para mostrar con los filtros actuales.</td></tr>`;
+      : `<tr><td colspan="${COLS}" class="text-center text-muted py-5">No hay usuarios para mostrar con los filtros actuales.</td></tr>`;
 
     const filteredCount = table.getFilteredRowModel().rows.length;
     const totalCount = data.length;
-    summary.textContent = `${filteredCount} de ${totalCount} fórmulas visibles`;
+    summary.textContent = `${filteredCount} de ${totalCount} usuarios visibles`;
 
     const { pageIndex, pageSize } = table.getState().pagination;
     const pageCount = table.getPageCount();
@@ -337,31 +321,45 @@
       table.getColumn(sortBtn.dataset.sortColumn).toggleSorting(undefined, e.shiftKey);
       return;
     }
+
     const pageBtn = e.target.closest('[data-page-action]');
     if (pageBtn) {
       e.preventDefault();
       const action = pageBtn.dataset.pageAction;
-      if (action === 'prev')  table.previousPage();
+      if (action === 'prev') table.previousPage();
       else if (action === 'first') table.setPageIndex(0);
-      else if (action === 'last')  table.setPageIndex(Math.max(table.getPageCount() - 1, 0));
+      else if (action === 'last') table.setPageIndex(Math.max(table.getPageCount() - 1, 0));
       else if (/^\d+$/.test(action)) table.setPageIndex(Number(action));
       else table.nextPage();
+      return;
+    }
+
+    const delBtn = e.target.closest('[data-user-delete-url]');
+    if (delBtn) {
+      const deleteForm = document.getElementById('deleteAffiliateForm');
+      const deleteMessage = document.getElementById('deleteAffiliateMessage');
+      deleteForm.action = delBtn.dataset.userDeleteUrl;
+      deleteMessage.textContent =
+        `Vas a eliminar a "${delBtn.dataset.userDeleteName}". Esta acción no se puede deshacer.`;
+      bootstrap.Modal.getOrCreateInstance(
+        document.getElementById('deleteAffiliateModal')
+      ).show();
     }
   });
 
-  searchInput.addEventListener('input', (e) => table.setGlobalFilter(e.target.value.trim()));
-  estadoFiltro.addEventListener('change', (e) => table.getColumn('activo').setFilterValue(e.target.value));
-  pageSizeSelect.addEventListener('change', (e) => table.setPageSize(Number(e.target.value)));
-
   window.refreshCurrentTable = async function () {
     try {
-      var resp = await fetch('{% url "formula:datos_json" %}');
+      var resp = await fetch('{% url "usuarios:datos_json" %}');
       var json = await resp.json();
       data = json.data;
       state.pagination = { ...state.pagination, pageIndex: 0 };
       render();
     } catch (_) {}
   };
+
+  searchInput.addEventListener('input', (e) => table.setGlobalFilter(e.target.value.trim()));
+  estadoFiltro.addEventListener('change', (e) => table.getColumn('is_active').setFilterValue(e.target.value));
+  pageSizeSelect.addEventListener('change', (e) => table.setPageSize(Number(e.target.value)));
 
   render();
 </script>

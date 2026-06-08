@@ -15,6 +15,7 @@ urlpatterns = [
     path("afiliados/", include(("radicacion.urls", "radicacion"), namespace="radicacion")),
     path("formula/", include(("radicacion.urls_formulas", "formula"), namespace="formula")),
     path("select2/", include("django_select2.urls")),
+    path("usuarios/", include(("usuarios.urls", "usuarios"), namespace="usuarios")),
 ]
 
 if settings.DEBUG:
