@@ -14,3 +14,11 @@ class MedicamentoForm(forms.ModelForm):
             "concentracion": forms.TextInput(attrs={"class": "form-control", "placeholder": "Concentración"}),
             "activo": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name == "activo":
+                continue
+            if field.required:
+                field.widget.attrs["data-req"] = "true"
