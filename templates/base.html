@@ -1280,6 +1280,74 @@
       modal.show();
     }
 
+    // ---------------------------------------------------------------------------
+    // Client-side validation helpers
+    // ---------------------------------------------------------------------------
+    function limpiarErroresForm(form) {
+      form.querySelectorAll('.field-errors').forEach(function (el) { el.textContent = ''; });
+      form.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+      var s2 = document.getElementById('step-2-error');
+      var s3 = document.getElementById('step-3-error');
+      if (s2) s2.textContent = '';
+      if (s3) s3.textContent = '';
+    }
+
+    // Clear individual field error on input
+    document.addEventListener('input', function (e) {
+      var field = e.target;
+      if (!field.hasAttribute('data-req')) return;
+      var form = field.closest('form[data-ajax-form]');
+      if (!form) return;
+      if (field.value && field.value.trim() !== '') {
+        var errDiv = form.querySelector('.field-errors[data-field="' + field.name + '"]');
+        if (errDiv && errDiv.textContent) {
+          errDiv.textContent = '';
+          field.classList.remove('is-invalid');
+        }
+      }
+    });
+
+    // Wizard Next button validation (capture phase)
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('#btn-wizard-next');
+      if (!btn) return;
+      var form = document.getElementById('form-radicar');
+      if (!form) return;
+
+      limpiarErroresForm(form);
+      var step = parseInt(form.dataset.wizardStep || '1', 10);
+      var ok = true;
+
+      if (step === 1) {
+        // Validate Step 1 fields
+        form.querySelectorAll('[data-req="true"]').forEach(function (field) {
+          if (!field.value || field.value.trim() === '') {
+            var errDiv = form.querySelector('.field-errors[data-field="' + field.name + '"]');
+            if (errDiv) errDiv.textContent = 'Este campo es obligatorio.';
+            field.classList.add('is-invalid');
+            ok = false;
+          }
+        });
+        // Validate afiliado hidden field (create mode)
+        var afiliadoHidden = document.getElementById('id_afiliado_id_hidden');
+        if (afiliadoHidden && !afiliadoHidden.value) {
+          var errDiv = form.querySelector('.field-errors[data-field="afiliado_id_hidden"]');
+          if (errDiv) errDiv.textContent = 'Debe seleccionar un afiliado.';
+          ok = false;
+        }
+      } else if (step === 2) {
+        // Validate Step 2 – at least one medication
+        var step2Err = document.getElementById('step-2-error');
+        var meds = window._medicamentosRadicar || [];
+        if (meds.length === 0) {
+          if (step2Err) step2Err.textContent = 'Debe agregar al menos un medicamento.';
+          ok = false;
+        }
+      }
+
+      if (!ok) e.stopPropagation();
+    }, true);
+
     document.addEventListener('click', (event) => {
       const trigger = event.target.closest('[data-modal-url]');
       if (!trigger) {
@@ -1341,6 +1409,36 @@
         return;
       }
       event.preventDefault();
+
+      // ---- Client-side validation ----
+      var valid = true;
+      limpiarErroresForm(form);
+
+      form.querySelectorAll('[data-req="true"]').forEach(function (field) {
+        if (!field.value || field.value.trim() === '') {
+          var errDiv = form.querySelector('.field-errors[data-field="' + field.name + '"]');
+          if (errDiv) errDiv.textContent = 'Este campo es obligatorio.';
+          field.classList.add('is-invalid');
+          valid = false;
+        }
+      });
+
+      if (form.id === 'form-radicar') {
+        var step = parseInt(form.dataset.wizardStep || '1', 10);
+        if (step === 3) {
+          var step3Err = document.getElementById('step-3-error');
+          if (step3Err) step3Err.textContent = '';
+          var hasExisting = form.querySelectorAll('.soporte-card').length > 0;
+          var dt = window._dropzoneDt;
+          var hasNew = dt && dt.files.length > 0;
+          if (!hasExisting && !hasNew) {
+            if (step3Err) step3Err.textContent = 'Debe adjuntar al menos un archivo.';
+            valid = false;
+          }
+        }
+      }
+
+      if (!valid) return;
 
       const fd = new FormData(form);
 

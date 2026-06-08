@@ -40,17 +40,17 @@
 				<div class="col-md-6">
 					<label class="form-label" for="{{ form.medico.id_for_label }}">Médico</label>
 					{{ form.medico }}
-					{{ form.medico.errors }}
+					<div class="field-errors" data-field="medico" style="min-height:1.5rem;font-size:.8rem;color:#dc3545;">{{ form.medico.errors }}</div>
 				</div>
 				<div class="col-md-6">
 					<label class="form-label" for="{{ form.institucion.id_for_label }}">Institución</label>
 					{{ form.institucion }}
-					{{ form.institucion.errors }}
+					<div class="field-errors" data-field="institucion" style="min-height:1.5rem;font-size:.8rem;color:#dc3545;">{{ form.institucion.errors }}</div>
 				</div>
 				<div class="col-md-6">
 					<label class="form-label" for="{{ form.fecha_formula.id_for_label }}">Fecha fórmula</label>
 					{{ form.fecha_formula }}
-					{{ form.fecha_formula.errors }}
+					<div class="field-errors" data-field="fecha_formula" style="min-height:1.5rem;font-size:.8rem;color:#dc3545;">{{ form.fecha_formula.errors }}</div>
 				</div>
 				<div class="col-12">
 					<label class="form-label" for="{{ form.observaciones.id_for_label }}">Observaciones</label>
@@ -89,6 +89,7 @@
 							</button>
 						</div>
 					</div>
+					<div id="step-2-error" style="min-height:1.5rem;font-size:.8rem;color:#dc3545;margin-top:0.25rem;"></div>
 				</div>
 				<div class="col-12">
 					<label class="form-label" for="id_info_formula_fisica">Información de la Fórmula Física</label>
@@ -158,6 +159,7 @@
 						</div>
 						<div class="dropzone-thumbs" id="dropzone-thumbs" hidden></div>
 					</div>
+					<div id="step-3-error" style="min-height:1.5rem;font-size:.8rem;color:#dc3545;margin-top:0.25rem;"></div>
 				</div>
 			</div>
 		</div>

@@ -56,6 +56,14 @@ class FormulaBaseForm(forms.ModelForm):
             widget=widget_afiliado,
             required=False
         )
+
+        for field_name, field in self.fields.items():
+            if field_name in ("observaciones", "activo", "afiliado"):
+                continue
+            if field_name == "medico":
+                field.required = True
+            if field.required:
+                field.widget.attrs["data-req"] = "true"
     
     # Evita que el texto del input que contene el nombre del afiliado, intente guardarse en el modelo
     def clean_afiliado(self):
