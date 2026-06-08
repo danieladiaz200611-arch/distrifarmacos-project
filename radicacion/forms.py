@@ -17,6 +17,14 @@ class AfiliadoForm(forms.ModelForm):
             "activo": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name == "activo":
+                continue
+            if field.required:
+                field.widget.attrs["data-req"] = "true"
+
 
 class FormulaBaseForm(forms.ModelForm):
     class Meta:
