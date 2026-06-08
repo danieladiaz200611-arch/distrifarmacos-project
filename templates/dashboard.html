@@ -73,22 +73,17 @@
 
 <div class="row g-4">
   <div class="col-md-4 stagger-item" style="animation-delay: 0.2s;">
-    <div class="module-card">
-      <div class="module-card-corner module-card-corner-tl"></div>
-      <div class="module-card-corner module-card-corner-tr"></div>
-      <div class="module-card-media">
-        <div class="module-card-accent teal"></div>
-        <div class="module-card-icon-frame">
+    <div class="mod-card">
+      <div class="mod-card-bar blue"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-icon mod-card-icon-blue">
           <i class="bi bi-boxes"></i>
         </div>
-        <span class="module-card-tag teal">Catálogo</span>
-      </div>
-      <div class="module-card-body">
-        <h3 class="module-card-title">Medicamentos</h3>
-        <p class="module-card-desc">
-          Carga, edita y consulta el catálogo de medicamentos existentes en el sistema.
-        </p>
-        <a href="{% url 'parametricas:lista' %}" class="module-card-btn teal">
+        <span class="mod-card-badge mod-card-badge-blue">Catálogo</span>
+        <h3 class="mod-card-title">Medicamentos</h3>
+        <p class="mod-card-desc">Carga, edita y consulta el catálogo de medicamentos existentes en el sistema.</p>
+        <div class="mod-card-divider"></div>
+        <a href="{% url 'parametricas:lista' %}" class="mod-card-link mod-card-link-blue">
           <span>Abrir catálogo</span>
           <i class="bi bi-arrow-right"></i>
         </a>
@@ -97,22 +92,17 @@
   </div>
 
   <div class="col-md-4 stagger-item" style="animation-delay: 0.3s;">
-    <div class="module-card">
-      <div class="module-card-corner module-card-corner-tl"></div>
-      <div class="module-card-corner module-card-corner-tr"></div>
-      <div class="module-card-media">
-        <div class="module-card-accent green"></div>
-        <div class="module-card-icon-frame" style="background: linear-gradient(135deg, #e0e7ff, #a5b4fc);">
-          <i class="bi bi-people" style="color: #6366f1;"></i>
+    <div class="mod-card">
+      <div class="mod-card-bar indigo"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-icon mod-card-icon-indigo">
+          <i class="bi bi-people"></i>
         </div>
-        <span class="module-card-tag green">Afiliación</span>
-      </div>
-      <div class="module-card-body">
-        <h3 class="module-card-title">Afiliados</h3>
-        <p class="module-card-desc">
-          Gestiona y controla de forma eficiente, la información de los pacientes asegurados en el sistema.
-        </p>
-        <a href="{% url 'radicacion:lista' %}" class="module-card-btn green">
+        <span class="mod-card-badge mod-card-badge-indigo">Afiliación</span>
+        <h3 class="mod-card-title">Afiliados</h3>
+        <p class="mod-card-desc">Gestiona y controla de forma eficiente, la información de los pacientes asegurados en el sistema.</p>
+        <div class="mod-card-divider"></div>
+        <a href="{% url 'radicacion:lista' %}" class="mod-card-link mod-card-link-indigo">
           <span>Ver pacientes</span>
           <i class="bi bi-arrow-right"></i>
         </a>
@@ -121,22 +111,17 @@
   </div>
 
   <div class="col-md-4 stagger-item" style="animation-delay: 0.4s;">
-    <div class="module-card">
-      <div class="module-card-corner module-card-corner-tl"></div>
-      <div class="module-card-corner module-card-corner-tr"></div>
-      <div class="module-card-media">
-        <div class="module-card-accent amber"></div>
-        <div class="module-card-icon-frame" style="background: linear-gradient(135deg, #cffafe, #67e8f9);">
-          <i class="bi bi-receipt" style="color: #0891b2;"></i>
+    <div class="mod-card">
+      <div class="mod-card-bar cyan"></div>
+      <div class="mod-card-body">
+        <div class="mod-card-icon mod-card-icon-cyan">
+          <i class="bi bi-receipt"></i>
         </div>
-        <span class="module-card-tag amber">Radicación</span>
-      </div>
-      <div class="module-card-body">
-        <h3 class="module-card-title">Fórmulas</h3>
-        <p class="module-card-desc">
-          Gestiona de forma digital las recetas médicas asociadas a los afiliados del sistema.
-        </p>
-        <a href="{% url 'formula:lista' %}" class="module-card-btn amber">
+        <span class="mod-card-badge mod-card-badge-cyan">Radicación</span>
+        <h3 class="mod-card-title">Fórmulas</h3>
+        <p class="mod-card-desc">Gestiona de forma digital las recetas médicas asociadas a los afiliados del sistema.</p>
+        <div class="mod-card-divider"></div>
+        <a href="{% url 'formula:lista' %}" class="mod-card-link mod-card-link-cyan">
           <span>Radicar fórmulas</span>
           <i class="bi bi-arrow-right"></i>
         </a>
@@ -600,241 +585,174 @@
 /* ================================
    MODULE CARDS
    ================================ */
-.module-card {
+.mod-card {
   background: #fff;
   border: 1px solid #eef2f6;
-  border-radius: 10px;
+  border-radius: 20px;
   overflow: hidden;
   height: 100%;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
   display: flex;
   flex-direction: column;
   position: relative;
 }
 
-.module-card:hover {
+.mod-card:hover {
   border-color: #e2e8f0;
-  box-shadow: 0 16px 40px -12px rgba(37, 99, 235, 0.18);
-  transform: translateY(-6px);
+  box-shadow: 0 24px 56px -20px rgba(0,0,0,0.10);
+  transform: translateY(-8px);
 }
 
-.module-card-corner {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  border-color: #e2e8f0;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.mod-card-bar {
+  height: 4px;
+  flex-shrink: 0;
 }
 
-.module-card:hover .module-card-corner {
-  opacity: 1;
-}
+.mod-card-bar.blue { background: linear-gradient(90deg, #2563eb, #60a5fa); }
+.mod-card-bar.indigo { background: linear-gradient(90deg, #6366f1, #a5b4fc); }
+.mod-card-bar.cyan { background: linear-gradient(90deg, #0891b2, #67e8f9); }
 
-.module-card-corner-tl {
-  top: 8px;
-  left: 8px;
-  border-top: 2px solid;
-  border-left: 2px solid;
-  border-radius: 4px 0 0 0;
-}
-
-.module-card-corner-tr {
-  top: 8px;
-  right: 8px;
-  border-top: 2px solid;
-  border-right: 2px solid;
-  border-radius: 0 4px 0 0;
-}
-
-.module-card-media {
-  position: relative;
-  padding: 1.75rem 1.75rem 0;
-}
-
-.module-card-accent {
-  position: absolute;
-  top: 0;
-  left: 1.75rem;
-  right: 1.75rem;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-}
-
-.module-card-accent.teal {
-  background: linear-gradient(90deg, #2563eb, #60a5fa);
-}
-
-.module-card-accent.green {
-  background: linear-gradient(90deg, #6366f1, #a5b4fc);
-}
-
-.module-card-accent.amber {
-  background: linear-gradient(90deg, #14afd6, #19a4e0);
-}
-
-.module-card-icon-frame {
-  width: 54px;
-  height: 54px;
-  background: linear-gradient(135deg, #dbeafe, #93c5fd);
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.4rem;
-  color: #2563eb;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.module-card:hover .module-card-icon-frame {
-  transform: scale(1.08) rotate(-2deg);
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
-}
-
-.module-card-tag {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-top: 1rem;
-}
-
-.module-card-tag.teal {
-  color: #2563eb;
-}
-
-.module-card-tag.green {
-  color: #6366f1;
-}
-
-.module-card-tag.amber {
-  color: #0891b2;
-}
-
-.module-card-body {
-  padding: 1rem 1.75rem 1.75rem;
+.mod-card-body {
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-.module-card-title {
+.mod-card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1.25rem;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+}
+
+.mod-card:hover .mod-card-icon {
+  transform: scale(1.06) rotate(-3deg);
+}
+
+.mod-card-icon-blue {
+  background: linear-gradient(135deg, #dbeafe, #93c5fd);
+  color: #2563eb;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.15);
+}
+
+.mod-card-icon-indigo {
+  background: linear-gradient(135deg, #e0e7ff, #a5b4fc);
+  color: #6366f1;
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.15);
+}
+
+.mod-card-icon-cyan {
+  background: linear-gradient(135deg, #cffafe, #67e8f9);
+  color: #0891b2;
+  box-shadow: 0 6px 16px rgba(8, 145, 178, 0.15);
+}
+
+.mod-card-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 0.85rem;
+}
+
+.mod-card-badge-blue {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.mod-card-badge-indigo {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+.mod-card-badge-cyan {
+  background: #cffafe;
+  color: #0e7490;
+}
+
+.mod-card-title {
   font-family: "Space Grotesk", sans-serif;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: #0f172a;
   margin: 0 0 0.5rem;
   letter-spacing: -0.3px;
+  line-height: 1.3;
 }
 
-.module-card-desc {
+.mod-card-desc {
   font-size: 0.85rem;
   color: #64748b;
-  line-height: 1.55;
+  line-height: 1.6;
   margin: 0 0 1.25rem;
   flex: 1;
 }
 
-.module-card-stat {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #f8fafc;
-  border: 1px solid #eef2f6;
-  border-radius: 12px;
-  padding: 0.7rem 1rem;
+.mod-card-divider {
+  height: 1px;
+  background: #f1f5f9;
   margin-bottom: 1rem;
 }
 
-.module-card-stat-label {
-  font-size: 0.78rem;
-  font-weight: 500;
-  color: #64748b;
-}
-
-.module-card-stat-value {
-  font-family: "Space Grotesk", sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-.module-card-btn {
-  display: flex;
+.mod-card-link {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.75rem 1.25rem;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  gap: 8px;
+  font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
-  color: #fff;
-  border: none;
   transition: all 0.25s ease;
-  cursor: pointer;
+  padding: 2px 0;
   position: relative;
-  overflow: hidden;
 }
 
-.module-card-btn::before {
+.mod-card-link::after {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
-  pointer-events: none;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  border-radius: 1px;
+  transition: width 0.3s ease;
 }
 
-.module-card-btn::after {
-  content: '';
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.06), transparent);
-  transform: translateX(-100%) rotate(25deg);
-  transition: transform 0.6s ease;
-  pointer-events: none;
+.mod-card-link:hover::after {
+  width: 100%;
 }
 
-.module-card-btn:hover::after {
-  transform: translateX(100%) rotate(25deg);
+.mod-card-link i {
+  font-size: 0.85rem;
+  transition: transform 0.3s ease;
 }
 
-.module-card-btn.teal {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+.mod-card-link:hover i {
+  transform: translateX(6px);
 }
 
-.module-card-btn.green {
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-}
+.mod-card-link-blue { color: #2563eb; }
+.mod-card-link-blue::after { background: #2563eb; }
+.mod-card-link-blue:hover { color: #1d4ed8; }
 
-.module-card-btn.amber {
-  background: linear-gradient(135deg, #0891b2, #0e7490);
-}
+.mod-card-link-indigo { color: #6366f1; }
+.mod-card-link-indigo::after { background: #6366f1; }
+.mod-card-link-indigo:hover { color: #4f46e5; }
 
-.module-card-btn:hover {
-  filter: brightness(1.08);
-  transform: scale(1.02);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-  color: #fff;
-}
-
-.module-card-btn:active {
-  transform: scale(0.98);
-}
-
-.module-card-btn i {
-  transition: transform 0.25s ease;
-  font-size: 0.9rem;
-}
-
-.module-card-btn:hover i {
-  transform: translateX(5px);
-}
+.mod-card-link-cyan { color: #0891b2; }
+.mod-card-link-cyan::after { background: #0891b2; }
+.mod-card-link-cyan:hover { color: #0e7490; }
 
 /* ================================
    SYSTEM STATUS
