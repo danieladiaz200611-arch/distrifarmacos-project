@@ -577,51 +577,44 @@
             transparent 70%);
           pointer-events: none;
         }
-      </style>
-</head>
 
-<body>
-  <nav class="navbar navbar-expand-lg sticky-top">
-    <div class="container">
-      <a class="navbar-brand d-flex align-items-center gap-3" href="{% url 'dashboard' %}">
-        <span class="brand-badge">Df</span>
-        <span>
-          <span class="d-block brand-title fw-bold">Distrifármacos</span>
-          <small class="text-muted">Radicación y catálogo</small>
-        </span>
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="mainNav">
-        <ul class="navbar-nav ms-auto gap-lg-3 gap-2 align-items-lg-center">
-          {% if user.is_authenticated %}
-          <li class="nav-item">
-            <div class="d-flex align-items-center gap-1 user-session">
-              <div class="d-flex align-items-center gap-2 user-greeting">
-                <div class="user-dot"></div>
-                <i class="bi bi-person-circle user-icon"></i>
-                <span class="user-name">
-                  {{ user.first_name }}
-                  {% if user.last_name %}
-                  {{ user.last_name|slice:":1" }}.
-                  {% endif %}
-                </span>
-              </div>
-              <div class="session-divider"></div>
-              <form method="post" action="{% url 'logout' %}" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn-logout">
-                  <i class="bi bi-box-arrow-right"></i> Salir
-                </button>
-              </form>
-            </div>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
+        /* ================================
+           SIDEBAR
+           ================================ */
+        .sidebar-brand {
+          padding: 0.75rem;
+          border-bottom: 1px solid var(--sidebar-border);
+          margin-bottom: 0.5rem;
+        }
 
-      <style>
+        .sidebar-brand a {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .sidebar-brand .brand-text-wrapper {
+          display: flex;
+          flex-direction: column;
+          line-height: 1.2;
+        }
+
+        .sidebar-brand .brand-title {
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #0f172a;
+          letter-spacing: -0.3px;
+        }
+
+        .sidebar-brand .brand-subtitle {
+          font-size: 0.7rem;
+          color: var(--muted);
+          font-weight: 500;
+        }
+
         /* Contenedor que agrupa usuario + logout */
         .user-session {
           background: #f8fafc;
@@ -726,46 +719,19 @@
           transform: translateX(2px);
         }
 
-        /* Versión responsive */
-        @media (max-width: 991.98px) {
-          .navbar-nav {
-            padding-top: 1rem;
-            gap: 0.75rem !important;
-          }
-
+        /* Responsive para user-session */
+        @media (max-width: 575.98px) {
           .user-session {
-            width: 100%;
-            justify-content: center;
             background: transparent;
             border: none;
             padding: 0;
           }
-
           .user-greeting {
-            justify-content: center;
             padding: 6px 12px;
           }
-
           .btn-logout {
             padding: 6px 16px;
           }
-        }
-
-        /* Animación sutil al cargar */
-        @keyframes subtleFade {
-          from {
-            opacity: 0;
-            transform: translateY(5px);
-          }
-
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .navbar-nav>.nav-item {
-          animation: subtleFade 0.25s ease-out;
         }
 
         /* Footer */
@@ -811,36 +777,325 @@
           border-radius: 6px;
           color: #94a3b8;
         }
+        :root {
+          --sidebar-w: 250px;
+          --sidebar-bg: #ffffff;
+          --sidebar-border: #eef2f6;
+        }
+
+        .app-layout {
+          display: flex;
+          flex: 1;
+          min-height: 100vh;
+          position: relative;
+        }
+
+        .sidebar {
+          width: var(--sidebar-w);
+          flex-shrink: 0;
+          background: var(--sidebar-bg);
+          border-right: 1px solid var(--sidebar-border);
+          display: flex;
+          flex-direction: column;
+          position: sticky;
+          top: 0;
+          height: 100vh;
+          overflow-y: auto;
+          z-index: 1030;
+          padding: 0;
+          transition: transform 0.3s ease, margin-left 0.3s ease;
+        }
+
+        .sidebar-heading {
+          font-size: 0.65rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          color: #94a3b8;
+          padding: 1rem 0.75rem 0.5rem;
+        }
+
+        .sidebar-item {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 0.625rem 0.75rem;
+          border-radius: 10px;
+          color: #475569;
+          text-decoration: none;
+          font-size: 0.875rem;
+          font-weight: 500;
+          transition: all 0.2s ease;
+          margin-bottom: 2px;
+        }
+
+        .sidebar-item:hover {
+          background: #f1f5f9;
+          color: #1e293b;
+        }
+
+        .sidebar-item.active {
+          background: #eef2ff;
+          color: #4f46e5;
+          font-weight: 600;
+        }
+
+        .sidebar-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1rem;
+          flex-shrink: 0;
+          background: #f1f5f9;
+          color: #64748b;
+          transition: all 0.2s ease;
+        }
+
+        .sidebar-item:hover .sidebar-icon {
+          background: #e2e8f0;
+        }
+
+        .sidebar-item.active .sidebar-icon {
+          background: #2563eb;
+          color: #fff;
+        }
+
+        .sidebar-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .sidebar-nav {
+          padding: 0.25rem 0.75rem 0.75rem;
+          flex: 1;
+        }
+
+        .app-content {
+          flex: 1;
+          min-width: 0;
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* Sidebar toggle button */
+        .sidebar-toggle {
+          background: transparent;
+          border: none;
+          font-size: 1.25rem;
+          color: #475569;
+          padding: 0.375rem 0.5rem;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          margin-right: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .sidebar-toggle:hover {
+          background: #f1f5f9;
+          color: #1e293b;
+        }
+
+        /* Collapsed sidebar state */
+        body.sidebar-collapsed .sidebar {
+          margin-left: calc(-1 * var(--sidebar-w));
+        }
+
+        body.sidebar-collapsed .app-content {
+          margin-left: 0;
+        }
+
+        /* ================================
+           TOPBAR
+           ================================ */
+        .topbar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0.9rem 1.5rem;
+          background: rgba(255, 255, 255, 0.82);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+          flex-shrink: 0;
+          gap: 1rem;
+        }
+
+        .topbar-start {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+
+        .topbar-end {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          margin-left: auto;
+        }
+
+        .topbar-toggle {
+          background: transparent;
+          border: none;
+          font-size: 1.25rem;
+          color: #475569;
+          padding: 0.375rem 0.5rem;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .topbar-toggle:hover {
+          background: #f1f5f9;
+          color: #1e293b;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+          .topbar {
+            padding: 0.5rem 1rem;
+          }
+        }
+        @media (max-width: 991.98px) {
+          .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            height: 100vh;
+            z-index: 1050;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.08);
+            transform: translateX(-100%);
+          }
+
+          .sidebar.show {
+            transform: translateX(0);
+          }
+
+          .sidebar-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 1049;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+          }
+
+          .sidebar-backdrop.show {
+            opacity: 1;
+            pointer-events: all;
+          }
+        }
       </style>
-    </div>
-  </nav>
+</head>
 
-  <main class="app-shell">
-    <div class="container">
-      {% if messages %}
-      <div class="mb-4">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} border-0 shadow-sm" role="alert">{{ message }}</div>
-        {% endfor %}
+<body>
+
+  <div class="app-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <a href="{% url 'dashboard' %}">
+          <span class="brand-badge">Df</span>
+          <div class="brand-text-wrapper">
+            <span class="brand-title">Distrifármacos</span>
+            <small class="brand-subtitle">Radicación y catálogo</small>
+          </div>
+        </a>
       </div>
-      {% endif %}
+      <nav class="sidebar-nav">
+      <a href="{% url 'dashboard' %}" class="sidebar-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+        <span class="sidebar-icon"><i class="bi bi-speedometer2"></i></span>
+        <span class="sidebar-text">Dashboard</span>
+      </a>
+      <div class="sidebar-heading">Módulos</div>
+      <a href="{% url 'parametricas:lista' %}" class="sidebar-item {% if request.resolver_match.app_name == 'parametricas' %}active{% endif %}">
+        <span class="sidebar-icon"><i class="bi bi-boxes"></i></span>
+        <span class="sidebar-text">Medicamentos</span>
+      </a>
+      <a href="{% url 'radicacion:lista' %}" class="sidebar-item {% if request.resolver_match.app_name == 'radicacion' %}active{% endif %}">
+        <span class="sidebar-icon"><i class="bi bi-people"></i></span>
+        <span class="sidebar-text">Afiliados</span>
+      </a>
+      <a href="{% url 'formula:lista' %}" class="sidebar-item {% if request.resolver_match.app_name == 'formula' %}active{% endif %}">
+        <span class="sidebar-icon"><i class="bi bi-receipt"></i></span>
+        <span class="sidebar-text">Fórmulas</span>
+      </a>
+      </nav>
+    </aside>
 
-      {% block content %}{% endblock %}
-    </div>
-  </main>
+    <div class="app-content">
 
-  <footer class="app-footer">
-    <div class="container">
-      <div class="footer-divider"></div>
-      <div class="footer-content">
-        <span class="footer-brand">Distrifármacos</span>
-        <span class="footer-sep">|</span>
-        <span class="footer-copy">&copy; {% now "Y" %} — Todos los derechos reservados</span>
-        <span class="footer-sep d-none d-sm-inline">|</span>
-        <span class="footer-version">v1.0</span>
-      </div>
-    </div>
-  </footer>
+      <header class="topbar">
+        <div class="topbar-start">
+          <button class="topbar-toggle d-lg-none" type="button" id="sidebarToggleMobile" aria-label="Abrir menú">
+            <i class="bi bi-list"></i>
+          </button>
+        </div>
+        <div class="topbar-end">
+          {% if user.is_authenticated %}
+          <div class="d-flex align-items-center gap-1 user-session">
+            <div class="d-flex align-items-center gap-2 user-greeting">
+              <div class="user-dot"></div>
+              <i class="bi bi-person-circle user-icon"></i>
+              <span class="user-name">
+                {{ user.first_name }}
+                {% if user.last_name %}
+                {{ user.last_name|slice:":1" }}.
+                {% endif %}
+              </span>
+            </div>
+            <div class="session-divider"></div>
+            <form method="post" action="{% url 'logout' %}" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn-logout">
+                <i class="bi bi-box-arrow-right"></i> Salir
+              </button>
+            </form>
+          </div>
+          {% endif %}
+        </div>
+      </header>
+
+      <main class="app-shell">
+        <div class="container-fluid">
+          {% if messages %}
+          <div class="mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} border-0 shadow-sm" role="alert">{{ message }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          {% block content %}{% endblock %}
+        </div>
+      </main>
+
+      <footer class="app-footer">
+        <div class="container">
+          <div class="footer-divider"></div>
+          <div class="footer-content">
+            <span class="footer-brand">Distrifármacos</span>
+            <span class="footer-sep">|</span>
+            <span class="footer-copy">&copy; {% now "Y" %} — Todos los derechos reservados</span>
+            <span class="footer-sep d-none d-sm-inline">|</span>
+            <span class="footer-version">v1.0</span>
+          </div>
+        </div>
+      </footer>
+
+    </div><!-- .app-content -->
+  </div><!-- .app-layout -->
 
   <div class="modal fade" id="appModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
     data-bs-keyboard="false">
@@ -969,6 +1224,26 @@
     document.addEventListener('DOMContentLoaded', function () {
       initMedicamentoSelect(document.body);
       initAfiliadoSelect(document.body);
+
+      // Sidebar: mobile toggle
+      var toggle = document.getElementById('sidebarToggleMobile');
+      var sidebar = document.getElementById('sidebar');
+      if (toggle && sidebar) {
+        toggle.addEventListener('click', function () {
+          sidebar.classList.toggle('show');
+          var backdrop = document.querySelector('.sidebar-backdrop');
+          if (!backdrop) {
+            backdrop = document.createElement('div');
+            backdrop.className = 'sidebar-backdrop';
+            backdrop.addEventListener('click', function () {
+              sidebar.classList.remove('show');
+              backdrop.classList.remove('show');
+            });
+            document.body.appendChild(backdrop);
+          }
+          backdrop.classList.toggle('show');
+        });
+      }
     });
 
     async function loadModal(url) {
